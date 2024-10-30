@@ -29,11 +29,13 @@ class TasksController < ApplicationController
 
       
       def mark_active
-        @task = Task.find_by(id: params[:id])
-        if @task and @task.update(completed: false)
-          render 'tasks/update'
+        @task = Task.find(params[:id])
+        if @task.update(active: true)
+          render json: @task
+        else
+          render json: @task.errors, status: :unprocessable_entity
         end
-      end    
+      end
 
       private
         def task_params
