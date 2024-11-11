@@ -5,11 +5,16 @@ class TasksController < ApplicationController
     end
 
     def create
-        @task = Task.new(task_params)
-        if @task.save
-          render 'tasks/create' # can be omitted
-        end
+      @task = Task.new(task_params)
+      if @task.save
+        Rails.logger.info "Task created successfully: #{@task.inspect}"
+        render 'tasks/create'
+      else
+        Rails.logger.error "Failed to create task: #{@task.errors.full_messages}"
+        render json: { errors: @task.errors.full_messages }, status: :unprocessable_entity
       end
+    end
+    
 
       def destroy
         @task = Task.find_by(id: params[:id])
